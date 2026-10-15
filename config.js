@@ -1,0 +1,1 @@
+window.SHOP_CONFIG={SUPABASE_URL:"https://tufzlxfrtdhestbemcly.supabase.co",SUPABASE_PUBLISHABLE_KEY:"sb_publishable_gsKYsz40vs6iyWqkb6zyqg_OwoM8k87",ORDER_FUNCTION_URL:"https://tufzlxfrtdhestbemcly.supabase.co/functions/v1/submit-shop-order"};
