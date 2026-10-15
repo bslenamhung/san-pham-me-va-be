@@ -24,3 +24,22 @@
 .description-more summary:after{content:"＋";float:right;font-size:15px}
 .description-more[open] summary:after{content:"−"}
 .description-more p{white-space:pre-line;overflow-wrap:anywhere;margin:8px 0;font-size:12px;line-height:1.6;color:var(--muted)}
+
+/* Compact horizontal product card, with price directly beneath product image */
+.product{display:grid;grid-template-columns:minmax(110px,38%) minmax(0,1fr);align-items:stretch;gap:0}
+.product-visual{min-width:0;display:flex;flex-direction:column;align-items:stretch;background:#fff7fa;padding:10px}
+.product .photo{height:190px;min-height:190px;padding:8px;background:transparent}
+.product .photo img{width:100%;height:100%;object-fit:contain;object-position:center}
+.product-visual .price{display:block;text-align:center;font-size:15px;font-weight:800;margin:8px 0 4px;overflow-wrap:anywhere}
+.product .pbody{min-width:0;padding:14px;gap:8px}
+.product .pbody h3{margin:4px 0 8px;line-height:1.35;overflow-wrap:anywhere}
+.product-readmore{margin:2px 0 8px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.product-readmore summary{cursor:pointer;list-style:none;padding:11px 12px;font-weight:800;font-size:13px;line-height:1.4;color:var(--pink);background:#fff8fb}
+.product-readmore summary::-webkit-details-marker{display:none}
+.product-readmore summary:after{content:"＋";float:right;margin-left:8px}
+.product-readmore[open] summary:after{content:"−"}
+.product-readmore .readmore-section{padding:10px 12px;border-top:1px solid var(--line)}
+.product-readmore h4{margin:0 0 6px;font-size:13px}
+.product-readmore p{white-space:pre-line;overflow-wrap:anywhere;margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
+.product-readmore .source-link{display:block;padding:10px 12px;border-top:1px solid var(--line);font-size:12px;font-weight:700}
+@media(max-width:460px){.product{grid-template-columns:minmax(100px,38%) minmax(0,1fr)}.product-visual{padding:7px}.product .photo{height:145px;min-height:145px;padding:3px}.product-visual .price{font-size:13px}.product .pbody{padding:10px;gap:6px}.product .pbody h3{font-size:14px}.product-readmore summary{font-size:12px;padding:9px}.product .btn{font-size:12px;padding:9px 7px}}
