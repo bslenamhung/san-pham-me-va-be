@@ -67,3 +67,9 @@
 @media(max-width:460px){.product-visual .add-under-price,.product .pbody .product-detail-link{font-size:12px;padding:9px 4px}.product-visual .add-under-price{margin-top:8px}}
 
 #cart-panel{scroll-margin-top:18px}
+
+/* Stack minus, quantity, and plus vertically in one column */
+.cartrow{align-items:center}
+.cartrow>span:last-child{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:0 0 42px}
+.cartrow .cart-quantity button{width:34px;height:28px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1;padding:0;border-radius:9px}
+.cartrow .cart-quantity strong{font-size:14px;line-height:1.2;min-width:24px;text-align:center}
