@@ -65,3 +65,5 @@
 .product-visual .add-under-price{display:flex;width:100%;min-width:0;align-items:center;justify-content:center;text-align:center;white-space:normal;overflow-wrap:anywhere;line-height:1.25;font-size:13px;padding:10px 6px;margin:8px 0 4px;border-radius:12px}
 .product .pbody .product-detail-link{display:flex;width:100%;min-width:0;align-items:center;justify-content:center;text-align:center;line-height:1.25;white-space:normal;padding:10px 6px;font-size:13px;margin:10px 0 0}
 @media(max-width:460px){.product-visual .add-under-price,.product .pbody .product-detail-link{font-size:12px;padding:9px 4px}.product-visual .add-under-price{margin-top:8px}}
+
+#cart-panel{scroll-margin-top:18px}
