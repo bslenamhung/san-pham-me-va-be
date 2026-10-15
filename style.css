@@ -73,3 +73,9 @@
 .cartrow>span:last-child{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;flex:0 0 42px}
 .cartrow .cart-quantity button{width:34px;height:28px;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;line-height:1;padding:0;border-radius:9px}
 .cartrow .cart-quantity strong{font-size:14px;line-height:1.2;min-width:24px;text-align:center}
+
+/* Quantity order: plus at top, count in middle, minus at bottom */
+.cartrow .cart-quantity{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.cartrow .cart-quantity [data-inc]{order:0}
+.cartrow .cart-quantity strong{order:1}
+.cartrow .cart-quantity [data-dec]{order:2}
