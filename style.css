@@ -15,3 +15,12 @@
 .pbody p{white-space:pre-line;overflow-wrap:anywhere;line-height:1.55}
 @media(max-width:800px){.photo{height:200px;min-height:200px}}
 @media(max-width:460px){.photo{height:180px;min-height:180px}.pbody{padding:12px}.pbody h3{font-size:14px;line-height:1.4}.pbody p{font-size:13px;line-height:1.55}}
+
+/* Keep product cards compact; reveal full description on tap */
+.description-preview{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:8px 0 5px}
+.description-more{margin:4px 0 12px;border-top:1px solid var(--line);padding-top:8px}
+.description-more summary{cursor:pointer;color:var(--dark);font-size:12px;font-weight:800;list-style:none}
+.description-more summary::-webkit-details-marker{display:none}
+.description-more summary:after{content:"＋";float:right;font-size:15px}
+.description-more[open] summary:after{content:"−"}
+.description-more p{white-space:pre-line;overflow-wrap:anywhere;margin:8px 0;font-size:12px;line-height:1.6;color:var(--muted)}
