@@ -6,3 +6,12 @@
 .remember-option{display:flex!important;align-items:flex-start;gap:9px;font-size:13px!important;font-weight:600!important;color:var(--ink)}.remember-option input{width:18px;height:18px;flex:0 0 18px;margin:1px 0 0;accent-color:var(--pink)}.profile-prefill-note{font-size:12px;color:var(--muted);background:var(--soft);border-radius:10px;padding:10px 12px}
 
 .header{display:flex;align-items:center;justify-content:space-between;gap:16px}.site-menu{position:relative;flex:0 0 auto;z-index:20}.site-menu summary{list-style:none;cursor:pointer;width:48px;height:48px;border:1px solid var(--line);border-radius:14px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 2px 8px rgba(80,30,50,.05)}.site-menu summary::-webkit-details-marker{display:none}.site-menu summary span{display:block;width:22px;height:2.5px;border-radius:2px;background:var(--pink)}.site-menu[open] summary{background:var(--soft)}.site-menu-panel{position:absolute;right:0;top:calc(100% + 10px);width:min(280px,calc(100vw - 40px));padding:8px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(50,20,35,.16);display:flex;flex-direction:column;gap:3px}.site-menu-panel a{display:block;padding:13px 14px;border-radius:10px;color:var(--ink);font-weight:700;text-decoration:none}.site-menu-panel a:hover,.site-menu-panel a:focus{background:var(--soft);color:var(--pink)}@media(max-width:520px){.header{gap:8px}.brand{min-width:0}.brand b{font-size:14px}.brand small{font-size:11px}.site-menu summary{width:44px;height:44px}}
+
+/* Product image layout refinement: keep image inside its own clean area */
+.product{min-width:0}
+.photo{height:220px;min-height:220px;overflow:hidden;position:relative;background:#fff7fa;padding:14px}
+.photo img{display:block;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;object-position:center;padding:0;margin:0}
+.pbody{min-width:0;overflow-wrap:anywhere}
+.pbody p{white-space:pre-line;overflow-wrap:anywhere;line-height:1.55}
+@media(max-width:800px){.photo{height:200px;min-height:200px}}
+@media(max-width:460px){.photo{height:180px;min-height:180px}.pbody{padding:12px}.pbody h3{font-size:14px;line-height:1.4}.pbody p{font-size:13px;line-height:1.55}}
