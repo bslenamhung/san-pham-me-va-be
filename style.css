@@ -43,3 +43,8 @@
 .product-readmore p{white-space:pre-line;overflow-wrap:anywhere;margin:0;font-size:12px;line-height:1.6;color:var(--muted)}
 .product-readmore .source-link{display:block;padding:10px 12px;border-top:1px solid var(--line);font-size:12px;font-weight:700}
 @media(max-width:460px){.product{grid-template-columns:minmax(100px,38%) minmax(0,1fr)}.product-visual{padding:7px}.product .photo{height:145px;min-height:145px;padding:3px}.product-visual .price{font-size:13px}.product .pbody{padding:10px;gap:6px}.product .pbody h3{font-size:14px}.product-readmore summary{font-size:12px;padding:9px}.product .btn{font-size:12px;padding:9px 7px}}
+
+/* Reveal related products only while product details are expanded */
+.related-reveal{margin-top:8px}
+.product-readmore[open] ~ .related-reveal{display:block}
+.related-reveal[hidden]{display:none!important}
