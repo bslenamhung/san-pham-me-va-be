@@ -12,4 +12,4 @@ const cards=related.map(x=>'<article class="product"><div class="product-visual"
 $("#detail").insertAdjacentHTML("beforeend",'<section class="related-section"><h2>Sản phẩm cùng loại</h2><p>Các sản phẩm thuộc cùng danh mục'+(p.subcategory?' phụ '+esc(p.subcategory):'')+'.</p><div class="grid">'+cards+'</div></section>');
 }
 }
-load();
+load().catch(err=>{console.error('Product detail loading failed',err);const el=document.querySelector('#detail');if(el)el.innerHTML='<p>Chưa tải được thông tin sản phẩm. Vui lòng tải lại trang hoặc quay lại cửa hàng.</p>';});
