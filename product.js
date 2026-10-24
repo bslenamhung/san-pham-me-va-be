@@ -1,3 +1,9 @@
+import {createClient} from "https://esm.sh/@supabase/supabase-js@2.57.0";
+const db=createClient(window.SHOP_CONFIG.SUPABASE_URL,window.SHOP_CONFIG.SUPABASE_PUBLISHABLE_KEY);
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const slugify=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"d").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const money=n=>new Intl.NumberFormat("vi-VN",{style:"currency",currency:"VND",maximumFractionDigits:0}).format(n||0);
 async function load(){
 const id=new URLSearchParams(location.search).get("id"),match=location.pathname.match(/\/san-pham\/([^/]+)\.html$/),slug=match?decodeURIComponent(match[1]):"";
 const {data:all,error}=await db.from("shop_products").select("id,name,slug,description,category,subcategory,origin,price_vnd,image_url,declared_ingredients,source_url").eq("is_active",true);
