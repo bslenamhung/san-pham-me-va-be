@@ -107,3 +107,7 @@
 }
 
 .pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin:24px 0}.pagination span{font-size:13px;color:var(--muted)}.product-detail-link{display:inline-block;margin-top:8px;color:var(--dark);font-size:13px;font-weight:750;text-decoration:none}.product-detail-link:hover{text-decoration:underline}
+
+/* Clinic logo in the shop header */
+.clinic-logo-small{display:block;width:54px;height:54px;flex:0 0 54px;object-fit:contain;border-radius:14px;background:#fff;padding:2px}
+@media(max-width:600px){.clinic-logo-small{width:48px;height:48px;flex-basis:48px}}
