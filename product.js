@@ -1,5 +1,5 @@
 async function load(){
-const id=new URLSearchParams(location.search).get("id"),match=location.pathname.match(/\\/san-pham\\/([^/]+)\\.html$/),slug=match?decodeURIComponent(match[1]):"";
+const id=new URLSearchParams(location.search).get("id"),match=location.pathname.match(/\/san-pham\/([^/]+)\.html$/),slug=match?decodeURIComponent(match[1]):"";
 const {data:all,error}=await db.from("shop_products").select("id,name,slug,description,category,subcategory,origin,price_vnd,image_url,declared_ingredients,source_url").eq("is_active",true);
 const p=error||!all?null:(id?all.find(x=>x.id===id):slug?all.find(x=>(x.slug||slugify(x.name))===slug):null);
 if(error||!p){$("#detail").innerHTML="<p>Không tìm thấy sản phẩm hoặc sản phẩm đã ngừng hiển thị. <a href='/san-pham-me-va-be/'>Quay lại cửa hàng</a></p>";return}
