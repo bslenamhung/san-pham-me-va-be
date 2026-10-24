@@ -105,3 +105,5 @@
   .product .pbody h3 { font-size: 12px; }
   .product-visual .add-under-price, .product .pbody .product-detail-link { font-size: 11px; padding: 8px 3px; }
 }
+
+.pagination{display:flex;align-items:center;justify-content:center;gap:14px;margin:24px 0}.pagination span{font-size:13px;color:var(--muted)}.product-detail-link{display:inline-block;margin-top:8px;color:var(--dark);font-size:13px;font-weight:750;text-decoration:none}.product-detail-link:hover{text-decoration:underline}
