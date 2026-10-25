@@ -82,11 +82,45 @@ for (const p of products) {
 `;
   const outputPath = "san-pham/" + slug + ".html";
   try {
+    let existing = await fs.readFile(outputPath, "utf8");
+    const headEnd = existing.indexOf("</head>");
+    if (headEnd < 0) throw new Error("Trang sản phẩm thiếu </head>: " + outputPath);
+    let head = existing.slice(0, headEnd);
+    const body = existing.slice(headEnd);
+    const readContent = (key) => {
+      const tag = head.match(new RegExp('<meta[^>]+(?:property|name)=["\\']' + key + '["\\'][^>]*>', "i"))?.[0] || "";
+      return tag.match(/content=["\\']([^"\\']*)["\\']/i)?.[1] || "";
+    };
+    const unescape = s => String(s || "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+    const oldTitle = unescape(head.match(/<title>([\\s\\S]*?)<\\/title>/i)?.[1] || title);
+    const oldDesc = unescape(readContent("og:description") || readContent("description") || desc);
+    const oldUrl = unescape(readContent("og:url") || canonical);
+    const oldImage = unescape(readContent("og:image") || readContent("twitter:image") || image);
+    const shareImage = /^https:\\/\\//i.test(oldImage) ? oldImage : image;
+    const imageType = /\\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
+    const tags = [
+      ["property","og:type","product"],["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],
+      ["property","og:title",oldTitle],["property","og:description",oldDesc],["property","og:url",oldUrl],
+      ["property","og:image",shareImage],["property","og:image:secure_url",shareImage],["property","og:image:alt",clean(p.name)],["property","og:image:type",imageType],
+      ["name","twitter:card","summary_large_image"],["name","twitter:title",oldTitle],["name","twitter:description",oldDesc],["name","twitter:image",shareImage]
+    ];
+    for (const [attr,key,value] of tags) {
+      const re = new RegExp('<meta\\\\s+' + attr + '=["\\\\']' + key.replace(/[.*+?^$\\\\{}()|[\\\\]\\\\]/g, "\\\\  try {
     await fs.access(outputPath);
     console.log("Giữ nguyên trang sản phẩm đã có metadata: " + outputPath);
   } catch {
     await fs.writeFile(outputPath, html, "utf8");
     console.log("Đã tạo trang sản phẩm mới: " + outputPath);
+  }") + '["\\\\'][^>]*>', "i");
+      const tag = '<meta ' + attr + '="' + key + '" content="' + esc(value) + '">';
+      if (re.test(head)) head = head.replace(re, tag); else head += "\\n" + tag;
+    }
+    if (!/name=["\\']robots["\\']/i.test(head)) head += '\\n<meta name="robots" content="index,follow,max-image-preview:large">';
+    await fs.writeFile(outputPath, head + body, "utf8");
+    console.log("Đã chuẩn hóa metadata chia sẻ, giữ nguyên nội dung: " + outputPath);
+  } catch (error) {
+    if (error?.code === "ENOENT") { await fs.writeFile(outputPath, html, "utf8"); console.log("Đã tạo trang sản phẩm mới: " + outputPath); }
+    else throw error;
   }
   urls.push({ url: canonical, modified: p.updated_at || p.created_at || new Date().toISOString() });
 }
