@@ -82,7 +82,7 @@ for (const p of products) {
 `;
   const outputPath = "san-pham/" + slug + ".html";
   try {
-    let existing = await fs.readFile(outputPath, "utf8");
+    const existing = await fs.readFile(outputPath, "utf8");
     const headEnd = existing.indexOf("</head>");
     if (headEnd < 0) throw new Error("Trang sản phẩm thiếu </head>: " + outputPath);
     let head = existing.slice(0, headEnd);
@@ -99,16 +99,43 @@ for (const p of products) {
     const oldImage = unescape(getMeta("og:image") || getMeta("twitter:image") || image);
     const shareImage = /^https:\\/\\//i.test(oldImage) ? oldImage : image;
     const imageType = /\\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
-    const tags = [["property","og:type","product"],["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],["property","og:title",oldTitle],["property","og:description",oldDesc],["property","og:url",oldUrl],["property","og:image",shareImage],["property","og:image:secure_url",shareImage],["property","og:image:alt",clean(p.name)],["property","og:image:type",imageType],["name","twitter:card","summary_large_image"],["name","twitter:title",oldTitle],["name","twitter:description",oldDesc],["name","twitter:image",shareImage]];
+    const tags = [
+      ["property","og:type","product"],
+      ["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],
+      ["property","og:title",oldTitle],
+      ["property","og:description",oldDesc],
+      ["property","og:url",oldUrl],
+      ["property","og:image",shareImage],
+      ["property","og:image:secure_url",shareImage],
+      ["property","og:image:alt",clean(p.name)],
+      ["property","og:image:type",imageType],
+      ["name","twitter:card","summary_large_image"],
+      ["name","twitter:title",oldTitle],
+      ["name","twitter:description",oldDesc],
+      ["name","twitter:image",shareImage]
+    ];
     for (const [attr,key,value] of tags) {
       const marker = attr + '="' + key + '"';
       const pos = head.indexOf(marker);
       const tag = '<meta ' + attr + '="' + key + '" content="' + esc(value) + '">';
-      if (pos >= 0) { const a = head.lastIndexOf("<meta", pos); const b = head.indexOf(">", pos); if (a >= 0 && b >= 0) head = head.slice(0,a) + tag + head.slice(b + 1); } else head += "\\n" + tag;
+      if (pos >= 0) {
+        const a = head.lastIndexOf("<meta", pos);
+        const b = head.indexOf(">", pos);
+        if (a >= 0 && b >= 0) head = head.slice(0, a) + tag + head.slice(b + 1);
+      } else {
+        head += "\n" + tag;
+      }
     }
     await fs.writeFile(outputPath, head + body, "utf8");
     console.log("Đã chuẩn hóa metadata chia sẻ, giữ nguyên nội dung: " + outputPath);
-  } catch (error) { if (error?.code === "ENOENT") { await fs.writeFile(outputPath, html, "utf8"); console.log("Đã tạo trang sản phẩm mới: " + outputPath); } else throw error; }
+  } catch (error) {
+    if (error?.code === "ENOENT") {
+      await fs.writeFile(outputPath, html, "utf8");
+      console.log("Đã tạo trang sản phẩm mới: " + outputPath);
+    } else {
+      throw error;
+    }
+  }
   urls.push({ url: canonical, modified: p.updated_at || p.created_at || new Date().toISOString() });
 }
 
