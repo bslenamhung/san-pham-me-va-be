@@ -89,8 +89,8 @@ for (const p of products) {
     const body = existing.slice(headEnd);
     const getMeta = key => {
       const tags = head.match(/<meta\\b[^>]*>/gi) || [];
-      const tag = tags.find(t => new RegExp('(?:property|name)=["\\']' + key.replace(/[.*+?^$\\{}()|[\\]\\]/g, "\\\\$&") + '["\\']', "i").test(t));
-      return tag?.match(/content=["\\']([^"\\']*)["\\']/i)?.[1] || "";
+      const tag = tags.find(t => t.includes('property="' + key + '"') || t.includes('name="' + key + '"'));
+      return tag?.match(/content="([^"]*)"/i)?.[1] || "";
     };
     const unescape = s => String(s || "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
     const oldTitle = unescape(head.match(/<title>([\\s\\S]*?)<\\/title>/i)?.[1] || title);
@@ -99,23 +99,16 @@ for (const p of products) {
     const oldImage = unescape(getMeta("og:image") || getMeta("twitter:image") || image);
     const shareImage = /^https:\\/\\//i.test(oldImage) ? oldImage : image;
     const imageType = /\\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
-    const tags = [
-      ["property","og:type","product"],["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],
-      ["property","og:title",oldTitle],["property","og:description",oldDesc],["property","og:url",oldUrl],
-      ["property","og:image",shareImage],["property","og:image:secure_url",shareImage],["property","og:image:alt",clean(p.name)],["property","og:image:type",imageType],
-      ["name","twitter:card","summary_large_image"],["name","twitter:title",oldTitle],["name","twitter:description",oldDesc],["name","twitter:image",shareImage]
-    ];
+    const tags = [["property","og:type","product"],["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],["property","og:title",oldTitle],["property","og:description",oldDesc],["property","og:url",oldUrl],["property","og:image",shareImage],["property","og:image:secure_url",shareImage],["property","og:image:alt",clean(p.name)],["property","og:image:type",imageType],["name","twitter:card","summary_large_image"],["name","twitter:title",oldTitle],["name","twitter:description",oldDesc],["name","twitter:image",shareImage]];
     for (const [attr,key,value] of tags) {
-      const tagRe = new RegExp('<meta\\\\b(?=[^>]*' + attr + '=["\\\\']' + key + '["\\\\'])[^>]*>', "i");
+      const marker = attr + '="' + key + '"';
+      const pos = head.indexOf(marker);
       const tag = '<meta ' + attr + '="' + key + '" content="' + esc(value) + '">';
-      if (tagRe.test(head)) head = head.replace(tagRe, tag); else head += "\\n" + tag;
+      if (pos >= 0) { const a = head.lastIndexOf("<meta", pos); const b = head.indexOf(">", pos); if (a >= 0 && b >= 0) head = head.slice(0,a) + tag + head.slice(b + 1); } else head += "\\n" + tag;
     }
     await fs.writeFile(outputPath, head + body, "utf8");
     console.log("Đã chuẩn hóa metadata chia sẻ, giữ nguyên nội dung: " + outputPath);
-  } catch (error) {
-    if (error?.code === "ENOENT") { await fs.writeFile(outputPath, html, "utf8"); console.log("Đã tạo trang sản phẩm mới: " + outputPath); }
-    else throw error;
-  }
+  } catch (error) { if (error?.code === "ENOENT") { await fs.writeFile(outputPath, html, "utf8"); console.log("Đã tạo trang sản phẩm mới: " + outputPath); } else throw error; }
   urls.push({ url: canonical, modified: p.updated_at || p.created_at || new Date().toISOString() });
 }
 
