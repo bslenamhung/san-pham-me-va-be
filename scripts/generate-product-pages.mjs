@@ -80,7 +80,14 @@ for (const p of products) {
 </head><body><header class="header"><a class="brand" href="/san-pham-me-va-be/"><img class="clinic-logo-small" src="${esc(LOGO)}" alt="Logo Phòng khám BS Hùng" width="54" height="54"><span><b>CỬA HÀNG MẸ &amp; BÉ</b><small>Phòng khám chuyên khoa phụ sản BS Hùng</small></span></a><a class="detail-back-top" href="/san-pham-me-va-be/">Quay lại cửa hàng</a></header>
 <main class="wrap detail-wrap"><div id="detail"><article class="detail-page"><div class="detail-visual">${p.image_url ? '<img src="' + esc(p.image_url) + '" alt="' + esc(clean(p.name)) + '">' : '<img src="' + esc(LOGO) + '" alt="Cửa hàng Mẹ và Bé BS Hùng">'}<b class="price">${Number(p.price_vnd) > 0 ? esc(new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND", maximumFractionDigits: 0 }).format(Number(p.price_vnd))) : "Liên hệ"}</b></div><div class="detail-copy"><small>${esc(category)}${p.subcategory ? " · " + esc(clean(p.subcategory)) : ""}</small><h1>${esc(clean(p.name))}</h1><section class="product-origin-detail"><h2>Xuất xứ</h2><p>${esc(clean(p.origin || "Chưa cập nhật"))}</p></section>${p.description ? '<section><h2>Thông tin sản phẩm</h2><p>' + esc(clean(p.description)) + '</p></section>' : ""}${p.declared_ingredients ? '<section><h2>Thành phần công bố</h2><p>' + esc(clean(p.declared_ingredients)) + '</p></section>' : ""}${p.source_url && /^https:\/\//i.test(p.source_url) ? '<p><a class="source-link" href="' + esc(p.source_url) + '" target="_blank" rel="noopener noreferrer">Xem nguồn công bố ↗</a></p>' : ""}<a class="btn primary detail-back" href="/san-pham-me-va-be/">Quay lại cửa hàng</a></div></article></div></main><footer>Phòng khám chuyên khoa phụ sản BS Hùng · Cửa hàng Mẹ &amp; Bé</footer><script src="/san-pham-me-va-be/config.js"></script><script type="module" src="/san-pham-me-va-be/product.js?v=static-product-meta-20261025"></script></body></html>
 `;
-  await fs.writeFile("san-pham/" + slug + ".html", html, "utf8");
+  const outputPath = "san-pham/" + slug + ".html";
+  try {
+    await fs.access(outputPath);
+    console.log("Giữ nguyên trang sản phẩm đã có metadata: " + outputPath);
+  } catch {
+    await fs.writeFile(outputPath, html, "utf8");
+    console.log("Đã tạo trang sản phẩm mới: " + outputPath);
+  }
   urls.push({ url: canonical, modified: p.updated_at || p.created_at || new Date().toISOString() });
 }
 
