@@ -88,17 +88,19 @@ for (const p of products) {
     let head = existing.slice(0, headEnd);
     const body = existing.slice(headEnd);
     const getMeta = key => {
-      const tags = head.match(/<meta\\b[^>]*>/gi) || [];
+      const tags = head.match(/<meta[^>]*>/gi) || [];
       const tag = tags.find(t => t.includes('property="' + key + '"') || t.includes('name="' + key + '"'));
       return tag?.match(/content="([^"]*)"/i)?.[1] || "";
     };
     const unescape = s => String(s || "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-    const oldTitle = unescape(head.match(/<title>([\\s\\S]*?)<\\/title>/i)?.[1] || title);
+    const titleStart = head.indexOf("<title>");
+    const titleEnd = head.indexOf("</title>", titleStart);
+    const oldTitle = unescape(titleStart >= 0 && titleEnd > titleStart ? head.slice(titleStart + 7, titleEnd) : title);
     const oldDesc = unescape(getMeta("og:description") || getMeta("description") || desc);
     const oldUrl = unescape(getMeta("og:url") || canonical);
     const oldImage = unescape(getMeta("og:image") || getMeta("twitter:image") || image);
-    const shareImage = /^https:\\/\\//i.test(oldImage) ? oldImage : image;
-    const imageType = /\\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
+    const shareImage = /^https:\/\//i.test(oldImage) ? oldImage : image;
+    const imageType = /\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
     const tags = [
       ["property","og:type","product"],
       ["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],
