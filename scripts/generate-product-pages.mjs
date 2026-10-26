@@ -87,56 +87,38 @@ for (const p of products) {
     if (headEnd < 0) throw new Error("Trang sản phẩm thiếu </head>: " + outputPath);
     let head = existing.slice(0, headEnd);
     const body = existing.slice(headEnd);
-    const getMeta = key => {
-      const tags = head.match(/<meta[^>]*>/gi) || [];
-      const tag = tags.find(t => t.includes('property="' + key + '"') || t.includes('name="' + key + '"'));
-      return tag?.match(/content="([^"]*)"/i)?.[1] || "";
-    };
-    const unescape = s => String(s || "").replace(/&amp;/g, "&").replace(/&quot;/g, '"').replace(/&#39;/g, "'");
-    const titleStart = head.indexOf("<title>");
-    const titleEnd = head.indexOf("</title>", titleStart);
-    const oldTitle = unescape(titleStart >= 0 && titleEnd > titleStart ? head.slice(titleStart + 7, titleEnd) : title);
-    const oldDesc = unescape(getMeta("og:description") || getMeta("description") || desc);
-    const oldUrl = unescape(getMeta("og:url") || canonical);
-    const oldImage = unescape(getMeta("og:image") || getMeta("twitter:image") || image);
-    const shareImage = /^https:\/\//i.test(oldImage) ? oldImage : image;
+    const shareTitle = title;
+    const shareDesc = desc;
+    const shareImage = /^https:\/\//i.test(String(p.image_url || "").trim()) ? String(p.image_url).trim() : LOGO;
     const imageType = /\.png(?:[?#]|$)/i.test(shareImage) ? "image/png" : /\.webp(?:[?#]|$)/i.test(shareImage) ? "image/webp" : "image/jpeg";
-    const tags = [
-      ["property","og:type","product"],
-      ["property","og:site_name","CỬA HÀNG MẸ & BÉ · BS HÙNG"],
-      ["property","og:title",oldTitle],
-      ["property","og:description",oldDesc],
-      ["property","og:url",oldUrl],
-      ["property","og:image",shareImage],
-      ["property","og:image:secure_url",shareImage],
-      ["property","og:image:alt",clean(p.name)],
-      ["property","og:image:type",imageType],
-      ["name","twitter:card","summary_large_image"],
-      ["name","twitter:title",oldTitle],
-      ["name","twitter:description",oldDesc],
-      ["name","twitter:image",shareImage]
-    ];
-    for (const [attr,key,value] of tags) {
-      const marker = attr + '="' + key + '"';
-      const pos = head.indexOf(marker);
+    const setMeta = (attr, key, value) => {
+      const re = new RegExp("<meta\\b(?=[^>]*\\b" + attr + "=\\\""+ key +"\\\")[^>]*>", "i");
       const tag = '<meta ' + attr + '="' + key + '" content="' + esc(value) + '">';
-      if (pos >= 0) {
-        const a = head.lastIndexOf("<meta", pos);
-        const b = head.indexOf(">", pos);
-        if (a >= 0 && b >= 0) head = head.slice(0, a) + tag + head.slice(b + 1);
-      } else {
-        head += "\n" + tag;
-      }
-    }
+      if (re.test(head)) head = head.replace(re, tag); else head += "\n" + tag;
+    };
+    const titleTag = "<title>" + esc(shareTitle) + "</title>";
+    if (/<title>[\\s\\S]*?<\\/title>/i.test(head)) head = head.replace(/<title>[\\s\\S]*?<\\/title>/i, titleTag); else head += "\n" + titleTag;
+    setMeta("name", "description", shareDesc);
+    setMeta("name", "robots", "index,follow,max-image-preview:large");
+    setMeta("property", "og:type", "product");
+    setMeta("property", "og:site_name", "CỬA HÀNG MẸ & BÉ · BS HÙNG");
+    setMeta("property", "og:title", shareTitle);
+    setMeta("property", "og:description", shareDesc);
+    setMeta("property", "og:url", canonical);
+    setMeta("property", "og:image", shareImage);
+    setMeta("property", "og:image:secure_url", shareImage);
+    setMeta("property", "og:image:alt", clean(p.name));
+    setMeta("property", "og:image:type", imageType);
+    setMeta("property", "og:image:width", "1200");
+    setMeta("property", "og:image:height", "630");
+    setMeta("name", "twitter:card", "summary_large_image");
+    setMeta("name", "twitter:title", shareTitle);
+    setMeta("name", "twitter:description", shareDesc);
+    setMeta("name", "twitter:image", shareImage);
     await fs.writeFile(outputPath, head + body, "utf8");
-    console.log("Đã chuẩn hóa metadata chia sẻ, giữ nguyên nội dung: " + outputPath);
+    console.log("Đã đồng bộ metadata chia sẻ và ảnh sản phẩm: " + outputPath);
   } catch (error) {
-    if (error?.code === "ENOENT") {
-      await fs.writeFile(outputPath, html, "utf8");
-      console.log("Đã tạo trang sản phẩm mới: " + outputPath);
-    } else {
-      throw error;
-    }
+    if (error?.code === "ENOENT") { await fs.writeFile(outputPath, html, "utf8"); console.log("Đã tạo trang sản phẩm mới: " + outputPath); } else throw error;
   }
   urls.push({ url: canonical, modified: p.updated_at || p.created_at || new Date().toISOString() });
 }
