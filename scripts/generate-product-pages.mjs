@@ -97,7 +97,7 @@ for (const p of products) {
       if (re.test(head)) head = head.replace(re, tag); else head += "\n" + tag;
     };
     const titleTag = "<title>" + esc(shareTitle) + "</title>";
-    if (/<title>[\\s\\S]*?<\\/title>/i.test(head)) head = head.replace(/<title>[\\s\\S]*?<\\/title>/i, titleTag); else head += "\n" + titleTag;
+    if (/<title>[\s\S]*?<\/title>/i.test(head)) head = head.replace(/<title>[\s\S]*?<\/title>/i, titleTag); else head += "\n" + titleTag;
     setMeta("name", "description", shareDesc);
     setMeta("name", "robots", "index,follow,max-image-preview:large");
     setMeta("property", "og:type", "product");
